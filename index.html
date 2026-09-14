@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="骑龙 QILONG：一个西幻桌面文字游戏的非官方资料站。" />
+    <title>骑龙 QILONG · 冒险者资料库</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&family=Uncial+Antiqua&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="topbar">
+        <a class="brand" href="#" data-home aria-label="返回首页">
+          <span class="brand-mark">✦</span>
+          <span>
+            <strong>QILONG</strong>
+            <small>骑龙 · 冒险者资料库</small>
+          </span>
+        </a>
+        <nav class="primary-nav" aria-label="主要导航">
+          <a class="active" href="#compendium">资料库</a>
+          <a href="#world">世界观</a>
+          <a href="#updates">更新日志 <span class="new-dot"></span></a>
+        </nav>
+        <div class="top-actions">
+          <button class="icon-button" type="button" data-theme-toggle aria-label="切换主题" title="切换主题">☼</button>
+          <button class="login-button" type="button" data-toast="账号功能将在正式上线时开放">登录</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero" id="world">
+          <div class="hero-art"></div>
+          <div class="hero-content">
+            <p class="eyebrow">THE QILONG COMPENDIUM · VOL. I</p>
+            <h1>踏入未知，<br /><em>书写你的传说。</em></h1>
+            <p class="hero-copy">骑龙世界的冒险者资料库。查找装备、法术与战斗技巧，<br class="desktop-break" />让每一次掷骰，都更接近你想要的结局。</p>
+            <button class="scroll-cue" type="button" data-scroll-to="compendium" aria-label="浏览资料库">
+              <span>↓</span>
+              <small>浏览资料库</small>
+            </button>
+          </div>
+          <div class="hero-rune rune-one">ᛉ</div>
+          <div class="hero-rune rune-two">ᛟ</div>
+        </section>
+
+        <section class="compendium-section" id="compendium">
+          <div class="section-intro">
+            <div>
+              <p class="eyebrow muted">THE ARCHIVES</p>
+              <h2>冒险者资料库</h2>
+            </div>
+            <p>古老的卷轴记录着世界的一切。<br />选择一个分类，开始你的探索。</p>
+          </div>
+
+          <div class="category-grid" data-category-grid></div>
+
+          <div class="browse-panel">
+            <div class="browse-heading">
+              <div>
+                <p class="eyebrow muted">EXPLORE THE ARCHIVES</p>
+                <h2 data-results-title>全部条目</h2>
+              </div>
+              <span class="result-count" data-result-count></span>
+            </div>
+            <div class="filter-row">
+              <label class="search-box">
+                <span aria-hidden="true">⌕</span>
+                <input type="search" placeholder="搜索名称、类型或关键词..." data-search />
+                <kbd>⌘ K</kbd>
+              </label>
+              <div class="select-wrap">
+                <select data-sort aria-label="排序">
+                  <option value="recent">最近更新</option>
+                  <option value="name">名称排序</option>
+                  <option value="rarity">稀有度排序</option>
+                </select>
+              </div>
+              <button class="filter-button" type="button" data-filter-toggle>☷ <span>筛选</span></button>
+            </div>
+            <div class="advanced-filters" data-advanced-filters>
+              <button class="filter-chip active" type="button" data-rarity="all">全部稀有度</button>
+              <button class="filter-chip" type="button" data-rarity="传说">传说</button>
+              <button class="filter-chip" type="button" data-rarity="史诗">史诗</button>
+              <button class="filter-chip" type="button" data-rarity="稀有">稀有</button>
+              <button class="filter-chip" type="button" data-rarity="普通">普通</button>
+            </div>
+            <div class="entry-grid" data-entry-grid></div>
+            <div class="empty-state" data-empty-state hidden>
+              <span>∅</span>
+              <h3>没有找到相关条目</h3>
+              <p>试试其他关键词，或清除当前筛选。</p>
+            </div>
+            <button class="load-more" type="button" data-load-more>展开更多条目 <span>↓</span></button>
+          </div>
+        </section>
+
+        <section class="quote-section" id="updates">
+          <div class="quote-ornament">❧</div>
+          <blockquote>“真正的宝藏，从来不在地图的尽头，<br />而在你决定启程的那一刻。”</blockquote>
+          <p>— 《旅者手札 · 第一页》</p>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-brand">
+          <span class="brand-mark">✦</span>
+          <strong>QILONG</strong>
+          <small>骑龙 · 冒险者资料库</small>
+        </div>
+        <p>© 2026 QILONG COMPENDIUM · 为所有勇敢的冒险者而作</p>
+        <div class="footer-links">
+          <a href="#compendium">资料库</a>
+          <a href="#world">关于骑龙</a>
+          <a href="#updates">更新日志</a>
+        </div>
+      </footer>
+    </div>
+
+    <dialog class="entry-dialog" data-dialog>
+      <button class="dialog-close" type="button" data-dialog-close aria-label="关闭详情">×</button>
+      <div class="dialog-sigil">✦</div>
+      <p class="eyebrow muted" data-dialog-category></p>
+      <h2 data-dialog-title></h2>
+      <p class="dialog-subtitle" data-dialog-subtitle></p>
+      <div class="dialog-divider"></div>
+      <div class="dialog-meta" data-dialog-meta></div>
+      <p class="dialog-description" data-dialog-description></p>
+      <div class="dialog-tags" data-dialog-tags></div>
+    </dialog>
+    <div class="toast" data-toast-region role="status" aria-live="polite"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

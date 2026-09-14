@@ -1,0 +1,10 @@
+{
+  "name": "qilong-codex",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Qilong fantasy tabletop game compendium",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js"
+  }
+}
