@@ -57,8 +57,8 @@ for (const newline of ["\n", "\r\n"]) {
     assert.equal(JSON.stringify(after.slice(1)), JSON.stringify(before));
     assert.equal(after[0].name, '测试 "引号" $& $\' $` <标签>');
     assert.ok(after[0].description.includes("第二行 $& $' $` <文字>"));
-    assert.equal(after[0].id, 57);
-    assert.equal(after[0].updated, 57);
+    assert.equal(after[0].id, Math.max(...before.map((entry) => entry.id)) + 1);
+    assert.equal(after[0].updated, Math.max(...before.map((entry) => entry.updated)) + 1);
     assert.equal(body.sha, "latest-file-sha");
     assert.equal(body.branch, "main");
     assert.equal(request.options.headers["Content-Type"], "application/json");
