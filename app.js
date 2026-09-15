@@ -13,6 +13,7 @@ const categories = [
 ];
 
 const entries = [
+  {"id":67,"category":"战斗技巧","name":"静观其变","subtitle":"战斗技巧 · 新增资料","meta":"文档资料","tags":["战斗技巧"],"description":"消耗：一回合\n触发条件：下一次行动获得一个奖励骰","updated":70},
   {"id":66,"category":"特殊效果词条","name":"狂烈欲望","subtitle":"特殊效果词条 · 新增资料","meta":"文档资料","tags":["特殊效果词条"],"description":"触发条件：每回合伤害判定时触发，不会自然下降\n效果：每回合伤害骰低于狂烈欲望层数时，流失差值的生命","updated":69},
   {"id":65,"category":"武器","name":"狂噬","subtitle":"武器 · 新增资料","meta":"文档资料","tags":["武器"],"description":"伤害与基础规则：伤害12d10\n特殊效果：每次战斗轮一次,使用时自身获得疯狂，判定失败5次后结束疯狂。","updated":68},
   {"id":64,"category":"武器","name":"蚌埠","subtitle":"武器 · 新增资料","meta":"文档资料","tags":["武器"],"description":"伤害与基础规则：伤害：90-3d20\n特殊效果：共鸣：伤害变为90-3d10,伤害类型变为法伤，命中后吸收流失的生命","updated":67},
