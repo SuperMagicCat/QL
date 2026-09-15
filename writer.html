@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="骑龙资料库本地写入器" />
+    <title>骑龙 · 资料写入器</title>
+    <link rel="stylesheet" href="./writer.css" />
+  </head>
+  <body>
+    <main class="writer-shell">
+      <header class="writer-header">
+        <div>
+          <p class="eyebrow">QILONG COMPENDIUM · LOCAL WRITER</p>
+          <h1>资料写入器</h1>
+          <p class="intro">把新资料写入对应分类，然后保存或推送到 GitHub。</p>
+        </div>
+        <a class="back-link" href="./">返回资料库 <span aria-hidden="true">↗</span></a>
+      </header>
+
+      <section class="writer-layout">
+        <form class="entry-form" data-entry-form>
+          <div class="form-heading">
+            <div>
+              <p class="eyebrow">NEW ENTRY</p>
+              <h2>新增一条资料</h2>
+            </div>
+            <span class="form-mark" aria-hidden="true">✦</span>
+          </div>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>所属分类 <b>*</b></span>
+              <select name="category" data-category required></select>
+            </label>
+            <label class="field">
+              <span>条目名称 <b>*</b></span>
+              <input name="name" type="text" maxlength="120" placeholder="例如：沉默规则" required />
+            </label>
+          </div>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>卡片副标题</span>
+              <input name="subtitle" type="text" maxlength="120" placeholder="默认使用“分类 · 玩家新增”" data-subtitle />
+            </label>
+            <label class="field">
+              <span>卡片底部信息</span>
+              <input name="meta" type="text" maxlength="80" value="玩家新增" placeholder="例如：消耗 10 MP" />
+            </label>
+          </div>
+
+          <label class="field">
+            <span>搜索标签</span>
+            <input name="tags" type="text" maxlength="200" placeholder="用逗号分隔，例如：状态,规则,战斗" />
+          </label>
+
+          <label class="field">
+            <span>详细内容 <b>*</b></span>
+            <textarea name="description" rows="11" maxlength="12000" placeholder="写入这条资料的规则、效果、数值或备注……" required></textarea>
+            <small class="field-hint">支持直接粘贴多段文字，网站会按原内容显示。</small>
+          </label>
+
+          <div class="form-actions">
+            <button class="button button-secondary" type="button" data-reset>
+              <span aria-hidden="true">↺</span>
+              清空
+            </button>
+            <button class="button button-primary" type="submit" data-save>
+              <span aria-hidden="true">＋</span>
+              保存到本地
+            </button>
+            <button class="button button-publish" type="button" data-publish>
+              <span aria-hidden="true">↑</span>
+              保存并推送 Git
+            </button>
+          </div>
+          <p class="form-status" data-status role="status" aria-live="polite"></p>
+        </form>
+
+        <aside class="side-panel">
+          <section class="preview-section">
+            <div class="side-heading">
+              <p class="eyebrow">PREVIEW</p>
+              <span>网站卡片</span>
+            </div>
+            <article class="preview-card" data-preview>
+              <div class="preview-topline">
+                <span data-preview-category>武器</span>
+              </div>
+              <h3 data-preview-name>未命名条目</h3>
+              <p data-preview-description>在左侧填写内容，这里会实时预览它在资料库中的样子。</p>
+              <div class="preview-footer">
+                <span data-preview-meta>玩家新增</span>
+                <span aria-hidden="true">↗</span>
+              </div>
+            </article>
+          </section>
+
+          <section class="library-section">
+            <div class="side-heading">
+              <p class="eyebrow">LIBRARY</p>
+              <span data-count>正在读取……</span>
+            </div>
+            <div class="recent-list" data-recent-list></div>
+          </section>
+        </aside>
+      </section>
+
+      <footer class="writer-footer">
+        <span>仅本机写入 · Git 推送后由已连接的静态托管自动部署</span>
+        <code>http://127.0.0.1:4173/writer</code>
+      </footer>
+    </main>
+    <script src="./writer.js"></script>
+  </body>
+</html>
