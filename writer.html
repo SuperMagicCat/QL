@@ -46,6 +46,32 @@
           </div>
         </div>
 
+        <div class="mode-switch" role="tablist" aria-label="写入模式">
+          <button type="button" class="mode-button active" data-mode="create" role="tab" aria-selected="true">新增条目</button>
+          <button type="button" class="mode-button" data-mode="edit" role="tab" aria-selected="false">修改已有条目</button>
+        </div>
+
+        <div class="existing-panel" data-existing-panel hidden>
+          <div class="existing-toolbar">
+            <label>
+              <span>按分页筛选</span>
+              <select data-entry-category></select>
+            </label>
+            <label>
+              <span>筛选条目</span>
+              <input type="search" data-entry-search placeholder="搜索名称" />
+            </label>
+            <button class="secondary-button load-button" type="button" data-load-entries>读取仓库资料</button>
+          </div>
+          <label>
+            <span>选择要修改的条目</span>
+            <select data-entry-select disabled>
+              <option>请先读取仓库资料</option>
+            </select>
+          </label>
+          <p class="field-help" data-existing-help>读取后选择条目，下面的表单会载入当前内容。</p>
+        </div>
+
         <div class="form-section">
           <div class="section-heading">
             <p class="eyebrow">02 · CATEGORY</p>
@@ -78,6 +104,10 @@
             </label>
           </div>
           <div class="detail-fields" data-detail-fields></div>
+          <label class="raw-description" data-raw-description hidden>
+            <span>完整详情</span>
+            <textarea name="raw-description" data-raw-description-input></textarea>
+          </label>
         </div>
 
         <div class="form-actions">

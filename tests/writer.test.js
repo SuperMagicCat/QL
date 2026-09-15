@@ -10,21 +10,29 @@ function setup({ source = appSource, category = "武器", name = "测试条目",
   const fields = Object.entries({
     token: "test-only-token", repository: "SuperMagicCat/QL", branch: "main",
     category, name, meta: "伤害 2d8", tags: "测试，测试,格式",
-    "detail-0": "", "detail-1": "第一行\n第二行 $& $' $` <文字>", "detail-2": "", "detail-3": ""
+    "detail-0": "", "detail-1": "第一行\n第二行 $& $' $` <文字>", "detail-2": "", "detail-3": "",
+    "raw-description": ""
   }).map(([name, value]) => ({ name, value, disabled: false }));
   fields.namedItem = (name) => fields.find((field) => field.name === name);
   const form = { elements: fields, addEventListener() {} };
   const status = {};
+  const modeButtons = ["create", "edit"].map((mode) => ({ dataset: { mode }, classList: { toggle() {} }, setAttribute() {}, addEventListener() {} }));
   const nodes = {
     "[data-writer-form]": form,
     "[data-category-select]": Object.assign(fields.namedItem("category"), { addEventListener() {} }),
-    "[data-detail-fields]": {}, "[data-category-help]": {},
-    "[data-status]": status, "[data-submit-button]": {}
+    "[data-detail-fields]": {}, "[data-category-help]": {}, "[data-existing-panel]": {},
+    "[data-entry-search]": Object.assign({ value: "", addEventListener() {} }),
+    "[data-entry-category]": Object.assign({ value: "", addEventListener() {} }),
+    "[data-entry-select]": Object.assign({ value: "", disabled: true, addEventListener() {} }),
+    "[data-existing-help]": {}, "[data-raw-description]": { hidden: true },
+    "[data-raw-description-input]": fields.namedItem("raw-description"),
+    "[data-load-entries]": { addEventListener() {} },
+    "[data-status]": status, "[data-submit-button]": { textContent: "", disabled: false }
   };
   const requests = [];
   const context = vm.createContext({
     TextEncoder, TextDecoder, btoa, atob, setTimeout,
-    document: { querySelector: (selector) => nodes[selector] },
+    document: { querySelector: (selector) => nodes[selector], querySelectorAll: () => modeButtons },
     FormData: class { constructor() { return new Map(fields.map(({ name, value }) => [name, value])); } },
     fetch: async (url, options) => {
       requests.push({ url, options });
@@ -99,4 +107,25 @@ test("a second click while publishing does not submit twice", async () => {
   const run = setup();
   await Promise.all([run.submit(), run.submit()]);
   assert.equal(run.requests.length, 2);
+});
+
+test("edits an existing entry and preserves the final comma format", async () => {
+  const run = setup({ category: "祷告", name: "血斩波" });
+  run.context.setMode("edit");
+  await run.context.loadExistingEntries();
+  const existing = run.context.readEntries(appSource).find((entry) => entry.name === "血斩波");
+  run.context.fillEditForm(existing);
+  run.fields.namedItem("name").value = "血斩波（修订）";
+  run.fields.namedItem("raw-description").value += "\n补充：修订测试";
+  await run.submit();
+  assert.equal(run.requests.length, 3);
+  const body = JSON.parse(run.requests[2].options.body);
+  const updated = Buffer.from(body.content, "base64").toString("utf8");
+  const entries = run.context.readEntries(updated);
+  const edited = entries.find((entry) => entry.id === existing.id);
+  assert.equal(edited.name, "血斩波（修订）");
+  assert.ok(edited.description.includes("修订测试"));
+  assert.equal(entries.at(-1).id, existing.id);
+  assert.equal(body.message, "修改祷告：血斩波（修订）");
+  new vm.Script(updated);
 });

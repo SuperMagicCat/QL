@@ -18,9 +18,26 @@ const detailFields = document.querySelector("[data-detail-fields]");
 const categoryHelp = document.querySelector("[data-category-help]");
 const status = document.querySelector("[data-status]");
 const submitButton = document.querySelector("[data-submit-button]");
+const existingPanel = document.querySelector("[data-existing-panel]");
+const entrySearch = document.querySelector("[data-entry-search]");
+const entryCategory = document.querySelector("[data-entry-category]");
+const entrySelect = document.querySelector("[data-entry-select]");
+const existingHelp = document.querySelector("[data-existing-help]");
+const rawDescription = document.querySelector("[data-raw-description]");
+const rawDescriptionInput = document.querySelector("[data-raw-description-input]");
+const modeButtons = [...document.querySelectorAll("[data-mode]")];
 let submitting = false;
+let mode = "create";
+let loadedTarget = null;
+let loadedEntries = [];
+let editingEntryId = null;
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character]));
+}
 
 categorySelect.innerHTML = Object.keys(categories).map((category) => `<option value="${category}">${category}</option>`).join("");
+entryCategory.innerHTML = '<option value="">全部分页</option>' + categorySelect.innerHTML;
 
 function renderFields() {
   const config = categories[categorySelect.value];
@@ -32,6 +49,26 @@ function renderFields() {
       <textarea name="detail-${index}" placeholder="${placeholder}"></textarea>
     </label>
   `).join("");
+}
+
+function setMode(nextMode) {
+  mode = nextMode;
+  editingEntryId = null;
+  modeButtons.forEach((button) => {
+    const active = button.dataset.mode === mode;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-selected", String(active));
+  });
+  existingPanel.hidden = mode !== "edit";
+  rawDescription.hidden = mode !== "edit";
+  detailFields.hidden = mode === "edit";
+  submitButton.textContent = mode === "edit" ? "保存修改到 GitHub" : "提交到 GitHub";
+  if (mode === "edit") {
+    existingHelp.textContent = loadedEntries.length ? "选择条目后，下面的表单会载入当前内容。" : "请先点击“读取仓库资料”。";
+    renderExistingEntries();
+  } else {
+    rawDescriptionInput.value = "";
+  }
 }
 
 function setStatus(message, type = "") {
@@ -50,6 +87,13 @@ function decodeBase64(value) {
   const binary = atob(value.replace(/\s/g, ""));
   const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
   return new TextDecoder().decode(bytes);
+}
+
+function repositoryInputs() {
+  const values = new FormData(form);
+  const repository = values.get("repository").trim();
+  if (!/^[-\w.]+\/[-\w.]+$/.test(repository)) throw new Error("仓库格式应为：用户名/仓库名。");
+  return { values, token: values.get("token").trim(), repository, branch: values.get("branch").trim() };
 }
 
 async function githubRequest(url, token, options = {}) {
@@ -115,16 +159,104 @@ function createEntry(values, existingEntries) {
   };
 }
 
+function renderExistingEntries() {
+  if (mode !== "edit") return;
+  const category = entryCategory.value;
+  const query = entrySearch.value.trim().toLowerCase();
+  const matching = loadedEntries.filter((entry) => {
+    const inCategory = !category || entry.category === category;
+    return inCategory && (!query || `${entry.name} ${entry.category} ${entry.description}`.toLowerCase().includes(query));
+  });
+  entrySelect.disabled = !matching.length;
+  entrySelect.innerHTML = matching.length
+    ? '<option value="">选择条目</option>' + matching.map((entry) => `<option value="${entry.id}">${escapeHTML(entry.category)} · ${escapeHTML(entry.name)}</option>`).join("")
+    : `<option>${loadedEntries.length ? "没有匹配的条目" : "请先读取仓库资料"}</option>`;
+  entrySelect.value = matching.some((entry) => entry.id === editingEntryId) ? String(editingEntryId) : "";
+}
+
+function fillEditForm(entry) {
+  if (!entry) return;
+  editingEntryId = entry.id;
+  form.elements.namedItem("name").value = entry.name;
+  form.elements.namedItem("meta").value = entry.meta || "";
+  form.elements.namedItem("tags").value = (entry.tags || []).filter((tag) => tag !== entry.category).join("，");
+  rawDescriptionInput.value = entry.description || "";
+  categorySelect.value = entry.category;
+  renderFields();
+  rawDescriptionInput.value = entry.description || "";
+  existingHelp.textContent = `当前编辑：${entry.category} · ${entry.name}（#${entry.id}）`;
+}
+
+async function loadExistingEntries() {
+  try {
+    const { token, repository, branch } = repositoryInputs();
+    if (!token) throw new Error("请先填写 GitHub Token。");
+    setStatus("正在读取 GitHub 上的最新资料……");
+    const apiBase = `https://api.github.com/repos/${repository}`;
+    const file = await githubRequest(`${apiBase}/contents/app.js?ref=${encodeURIComponent(branch)}`, token);
+    loadedEntries = readEntries(decodeBase64(file.content));
+    loadedTarget = { repository, branch };
+    existingHelp.textContent = `已读取 ${loadedEntries.length} 条资料，请选择要修改的条目。`;
+    setStatus("资料读取成功。", "success");
+    renderExistingEntries();
+  } catch (error) {
+    loadedTarget = null;
+    loadedEntries = [];
+    entrySelect.disabled = true;
+    existingHelp.textContent = "读取失败，请检查连接信息。";
+    setStatus(error.message || "读取失败，请检查 Token、仓库和分支。", "error");
+  }
+}
+
+function createUpdatedEntry(values, existingEntry, existingEntries) {
+  const category = values.get("category");
+  const name = values.get("name").trim();
+  const meta = values.get("meta").trim() || "待补充";
+  const tags = values.get("tags").split(/[，,]/).map((tag) => tag.trim()).filter(Boolean);
+  const description = values.get("raw-description").trim();
+  if (!description) throw new Error("请填写完整详情。");
+  if (existingEntries.some((entry) => entry.id !== existingEntry.id && entry.category === category && entry.name === name)) {
+    throw new Error(`“${name}”已经存在于${category}分页中。`);
+  }
+  const maxUpdated = existingEntries.reduce((max, entry) => Math.max(max, Number(entry.updated) || 0), 0);
+  return {
+    ...existingEntry,
+    category,
+    name,
+    subtitle: existingEntry.subtitle?.startsWith(`${category} ·`) ? existingEntry.subtitle : `${category} · 修改资料`,
+    meta,
+    tags: [...new Set([category, ...tags])],
+    description,
+    updated: maxUpdated + 1
+  };
+}
+
+function replaceEntry(source, entry) {
+  const lines = source.split(/\r?\n/);
+  const lineIndex = lines.findIndex((line) => new RegExp(`^\\s*\\{\\s*"id"\\s*:\\s*${entry.id}\\s*,`).test(line));
+  if (lineIndex < 0) throw new Error("没有找到要修改的条目，可能是资料已被其他人更新，请重新读取。");
+  const lineBreak = source.includes("\r\n") ? "\r\n" : "\n";
+  const comma = /,\s*$/.test(lines[lineIndex]) ? "," : "";
+  lines[lineIndex] = `  ${JSON.stringify(entry)}${comma}`;
+  return lines.join(lineBreak);
+}
+
 async function submitEntry(event) {
   event.preventDefault();
   if (submitting) return;
-  const values = new FormData(form);
-  const token = values.get("token").trim();
-  const repository = values.get("repository").trim();
-  const branch = values.get("branch").trim();
+  let connection;
+  try {
+    connection = repositoryInputs();
+  } catch (error) {
+    return setStatus(error.message, "error");
+  }
+  const { values, token, repository, branch } = connection;
   const name = values.get("name").trim();
   if (!name) return setStatus("请填写条目名称。", "error");
   if (!/^[-\w.]+\/[-\w.]+$/.test(repository)) return setStatus("仓库格式应为：用户名/仓库名。", "error");
+  if (mode === "edit" && (!editingEntryId || !loadedTarget || loadedTarget.repository !== repository || loadedTarget.branch !== branch)) {
+    return setStatus("请先读取当前仓库资料并选择要修改的条目。", "error");
+  }
 
   submitting = true;
   const controls = [...form.elements];
@@ -135,30 +267,45 @@ async function submitEntry(event) {
     const file = await githubRequest(`${apiBase}/contents/app.js?ref=${encodeURIComponent(branch)}`, token);
     const source = decodeBase64(file.content);
     const entries = readEntries(source);
-    const entry = createEntry(values, entries);
+    const existingEntry = mode === "edit" ? entries.find((entry) => entry.id === editingEntryId) : null;
+    if (mode === "edit" && !existingEntry) throw new Error("要修改的条目已不存在，请重新读取资料。");
+    if (mode === "edit" && JSON.stringify(existingEntry) !== JSON.stringify(loadedEntries.find((entry) => entry.id === editingEntryId))) {
+      throw new Error("这条资料已被其他提交修改。当前填写内容已保留，请重新读取并确认最新内容后再保存。");
+    }
+    const entry = mode === "edit" ? createUpdatedEntry(values, existingEntry, entries) : createEntry(values, entries);
     const lineBreak = source.includes("\r\n") ? "\r\n" : "\n";
-    const entriesRegion = source.match(/(const entries\s*=\s*\[)([\s\S]*?)(\]\s*;\s*const state\b)/);
-    if (!entriesRegion) throw new Error("没有找到可写入的 entries 数据区。");
-    const nextSource = source.replace(
-      entriesRegion[0],
-      () => `${entriesRegion[1]}${lineBreak}  ${JSON.stringify(entry)}${entries.length ? "," : ""}${entriesRegion[2]}${entriesRegion[3]}`
-    );
+    let nextSource;
+    if (mode === "edit") {
+      nextSource = replaceEntry(source, entry);
+    } else {
+      const entriesRegion = source.match(/(const entries\s*=\s*\[)([\s\S]*?)(\]\s*;\s*const state\b)/);
+      if (!entriesRegion) throw new Error("没有找到可写入的 entries 数据区。");
+      nextSource = source.replace(
+        entriesRegion[0],
+        () => `${entriesRegion[1]}${lineBreak}  ${JSON.stringify(entry)}${entries.length ? "," : ""}${entriesRegion[2]}${entriesRegion[3]}`
+      );
+    }
     setStatus("正在提交新条目……");
     const commit = await githubRequest(`${apiBase}/contents/app.js`, token, {
       method: "PUT",
       body: JSON.stringify({
-        message: `新增${entry.category}：${entry.name}`,
+        message: `${mode === "edit" ? "修改" : "新增"}${entry.category}：${entry.name}`,
         content: encodeBase64(nextSource),
         sha: file.sha,
         branch
       })
     });
-    setStatus(`已成功提交“${entry.name}”（${commit.commit?.sha?.slice(0, 7) || "已提交"}）。GitHub Pages 发布后，资料库会显示这条内容。`, "success");
-    ["name", "meta", "tags", "detail-0", "detail-1", "detail-2", "detail-3"].forEach((field) => {
-      const input = form.elements.namedItem(field);
-      if (input) input.value = "";
-    });
-    renderFields();
+    setStatus(`${mode === "edit" ? "已成功修改" : "已成功提交"}“${entry.name}”（${commit.commit?.sha?.slice(0, 7) || "已提交"}）。GitHub Pages 发布后，资料库会显示最新内容。`, "success");
+    if (mode === "edit") {
+      loadedEntries = entries.map((item) => item.id === entry.id ? entry : item);
+      renderExistingEntries();
+    } else {
+      ["name", "meta", "tags", "detail-0", "detail-1", "detail-2", "detail-3"].forEach((field) => {
+        const input = form.elements.namedItem(field);
+        if (input) input.value = "";
+      });
+      renderFields();
+    }
   } catch (error) {
     setStatus(error.message || "提交失败，请检查 Token、仓库和分支。", "error");
   } finally {
@@ -168,6 +315,11 @@ async function submitEntry(event) {
 }
 
 categorySelect.addEventListener("change", renderFields);
+entryCategory.addEventListener("change", renderExistingEntries);
+entrySearch.addEventListener("input", renderExistingEntries);
+entrySelect.addEventListener("change", () => fillEditForm(loadedEntries.find((entry) => entry.id === Number(entrySelect.value))));
+document.querySelector("[data-load-entries]").addEventListener("click", loadExistingEntries);
+modeButtons.forEach((button) => button.addEventListener("click", () => setMode(button.dataset.mode)));
 form.addEventListener("submit", submitEntry);
 form.addEventListener("reset", () => setTimeout(renderFields, 0));
 renderFields();
