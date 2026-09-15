@@ -113,7 +113,7 @@ function renderEntries() {
   resultsTitle.textContent = state.category === "全部" ? "全部条目" : state.category;
   resultCount.textContent = `${result.length} 条记录`;
   entryGrid.innerHTML = visible.map((entry) => `
-    <article class="entry-card" data-entry-id="${entry.id}" tabindex="0" role="button" aria-label="查看 ${entry.name}">
+    <article class="entry-card" data-entry-id="${entry.id}" tabindex="0" role="button" aria-label="查看 ${escapeHTML(entry.name)}">
       <div class="entry-topline">
         <span class="entry-type">${escapeHTML(entry.category)} · ${escapeHTML(entry.subtitle.split("·")[1]?.trim() || "资料")}</span>
       </div>

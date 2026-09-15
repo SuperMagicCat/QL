@@ -18,6 +18,7 @@ const detailFields = document.querySelector("[data-detail-fields]");
 const categoryHelp = document.querySelector("[data-category-help]");
 const status = document.querySelector("[data-status]");
 const submitButton = document.querySelector("[data-submit-button]");
+let submitting = false;
 
 categorySelect.innerHTML = Object.keys(categories).map((category) => `<option value="${category}">${category}</option>`).join("");
 
@@ -58,11 +59,21 @@ async function githubRequest(url, token, options = {}) {
       Accept: "application/vnd.github+json",
       Authorization: `Bearer ${token}`,
       "X-GitHub-Api-Version": "2022-11-28",
+      ...(options.body ? { "Content-Type": "application/json" } : {}),
       ...(options.headers || {})
     }
   });
   const body = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(body.message || `GitHub 请求失败（${response.status}）`);
+  if (!response.ok) {
+    const messages = {
+      401: "Token 无效或已过期，请重新填写。",
+      403: "没有写入权限或请求受到限制，请检查 Token 的 Contents 写入权限及仓库规则。",
+      404: "无法访问仓库或分支，请检查仓库名称、分支和 Token 的仓库授权。",
+      409: "资料已被其他提交更新。当前内容已保留，请再次提交以读取最新版本。",
+      422: "GitHub 拒绝了提交，请检查分支保护规则及 Token 权限。"
+    };
+    throw new Error(messages[response.status] || `GitHub 请求失败（${response.status}）。请稍后重试。`);
+  }
   return body;
 }
 
@@ -106,6 +117,7 @@ function createEntry(values, existingEntries) {
 
 async function submitEntry(event) {
   event.preventDefault();
+  if (submitting) return;
   const values = new FormData(form);
   const token = values.get("token").trim();
   const repository = values.get("repository").trim();
@@ -114,7 +126,9 @@ async function submitEntry(event) {
   if (!name) return setStatus("请填写条目名称。", "error");
   if (!/^[-\w.]+\/[-\w.]+$/.test(repository)) return setStatus("仓库格式应为：用户名/仓库名。", "error");
 
-  submitButton.disabled = true;
+  submitting = true;
+  const controls = [...form.elements];
+  controls.forEach((control) => { control.disabled = true; });
   setStatus("正在读取 GitHub 上的最新资料……");
   try {
     const apiBase = `https://api.github.com/repos/${repository}`;
@@ -127,7 +141,7 @@ async function submitEntry(event) {
     if (!entriesRegion) throw new Error("没有找到可写入的 entries 数据区。");
     const nextSource = source.replace(
       entriesRegion[0],
-      `${entriesRegion[1]}${lineBreak}  ${JSON.stringify(entry)},${lineBreak}${entriesRegion[2]}${entriesRegion[3]}`
+      () => `${entriesRegion[1]}${lineBreak}  ${JSON.stringify(entry)}${entries.length ? "," : ""}${entriesRegion[2]}${entriesRegion[3]}`
     );
     setStatus("正在提交新条目……");
     const commit = await githubRequest(`${apiBase}/contents/app.js`, token, {
@@ -139,7 +153,7 @@ async function submitEntry(event) {
         branch
       })
     });
-    setStatus(`已成功提交“${entry.name}”。${commit.commit?.html_url ? `提交记录：${commit.commit.html_url}` : "GitHub Pages 通常会在几分钟内发布更新。"}`, "success");
+    setStatus(`已成功提交“${entry.name}”（${commit.commit?.sha?.slice(0, 7) || "已提交"}）。GitHub Pages 发布后，资料库会显示这条内容。`, "success");
     ["name", "meta", "tags", "detail-0", "detail-1", "detail-2", "detail-3"].forEach((field) => {
       const input = form.elements.namedItem(field);
       if (input) input.value = "";
@@ -148,7 +162,8 @@ async function submitEntry(event) {
   } catch (error) {
     setStatus(error.message || "提交失败，请检查 Token、仓库和分支。", "error");
   } finally {
-    submitButton.disabled = false;
+    controls.forEach((control) => { control.disabled = false; });
+    submitting = false;
   }
 }
 
