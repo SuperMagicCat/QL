@@ -72,6 +72,9 @@ const entries = [
 ];
 
 const state = { category: "全部", search: "", sort: "recent", visible: 8 };
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character]));
+}
 const categoryGrid = document.querySelector("[data-category-grid]");
 const entryGrid = document.querySelector("[data-entry-grid]");
 const resultCount = document.querySelector("[data-result-count]");
@@ -112,11 +115,11 @@ function renderEntries() {
   entryGrid.innerHTML = visible.map((entry) => `
     <article class="entry-card" data-entry-id="${entry.id}" tabindex="0" role="button" aria-label="查看 ${entry.name}">
       <div class="entry-topline">
-        <span class="entry-type">${entry.category} · ${entry.subtitle.split("·")[1]?.trim() || "资料"}</span>
+        <span class="entry-type">${escapeHTML(entry.category)} · ${escapeHTML(entry.subtitle.split("·")[1]?.trim() || "资料")}</span>
       </div>
-      <h3>${entry.name}</h3>
-      <p>${entry.description}</p>
-      <div class="entry-footer"><span class="entry-meta">${entry.meta}</span><span class="entry-arrow">↗</span></div>
+      <h3>${escapeHTML(entry.name)}</h3>
+      <p>${escapeHTML(entry.description)}</p>
+      <div class="entry-footer"><span class="entry-meta">${escapeHTML(entry.meta)}</span><span class="entry-arrow">↗</span></div>
     </article>
   `).join("");
   emptyState.hidden = result.length > 0;
@@ -129,9 +132,9 @@ function openEntry(id) {
   document.querySelector("[data-dialog-category]").textContent = entry.category;
   document.querySelector("[data-dialog-title]").textContent = entry.name;
   document.querySelector("[data-dialog-subtitle]").textContent = entry.subtitle;
-  document.querySelector("[data-dialog-meta]").innerHTML = `<span><strong>${entry.meta}</strong>基础效果</span>`;
+  document.querySelector("[data-dialog-meta]").innerHTML = `<span><strong>${escapeHTML(entry.meta)}</strong>基础效果</span>`;
   document.querySelector("[data-dialog-description]").textContent = entry.description;
-  document.querySelector("[data-dialog-tags]").innerHTML = entry.tags.map((tag) => `<span>${tag}</span>`).join("");
+  document.querySelector("[data-dialog-tags]").innerHTML = entry.tags.map((tag) => `<span>${escapeHTML(tag)}</span>`).join("");
   dialog.showModal();
 }
 

@@ -1,0 +1,68 @@
+:root {
+  --ink: #171515;
+  --ink-soft: #292321;
+  --paper: #eee8dc;
+  --paper-light: #fbf8f1;
+  --muted: #81786f;
+  --line: rgba(73, 60, 47, .18);
+  --gold: #b28a46;
+  --gold-deep: #856330;
+  --red: #8c2f2b;
+  --green: #35654d;
+  --serif: "Cinzel", Georgia, serif;
+  --sans: "Noto Sans SC", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: var(--paper); font-family: var(--sans); }
+button, input, select, textarea { font: inherit; }
+a { color: inherit; text-decoration: none; }
+.writer-shell { width: min(960px, calc(100% - 40px)); margin: 0 auto; padding: 34px 0 80px; }
+.writer-header { max-width: 720px; margin-bottom: 34px; }
+.back-link { display: inline-block; margin-bottom: 42px; color: var(--gold-deep); font-size: 12px; }
+.back-link:hover { color: var(--red); }
+.eyebrow { margin: 0; color: var(--gold-deep); font: 600 10px/1.4 var(--serif); letter-spacing: .18em; text-transform: uppercase; }
+h1 { margin: 14px 0 12px; font: 600 clamp(38px, 6vw, 64px)/1.1 var(--serif); }
+.writer-header > p:last-child { color: var(--muted); font-size: 13px; line-height: 1.8; }
+.notice { display: flex; gap: 15px; align-items: baseline; margin-bottom: 18px; padding: 17px 19px; border-left: 3px solid var(--gold); background: rgba(255, 255, 255, .42); font-size: 12px; line-height: 1.7; }
+.notice strong { white-space: nowrap; color: var(--gold-deep); }
+.notice span { color: var(--muted); }
+.writer-form { border-top: 1px solid var(--line); }
+.form-section { padding: 31px 0 35px; border-bottom: 1px solid var(--line); }
+.section-heading { display: flex; align-items: baseline; gap: 17px; margin-bottom: 22px; }
+.section-heading h2 { margin: 0; font: 600 23px var(--serif); }
+.form-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 14px; }
+label { display: block; }
+label > span { display: block; margin-bottom: 8px; color: var(--muted); font-size: 11px; }
+input, select, textarea { width: 100%; border: 1px solid var(--line); border-radius: 0; outline: 0; color: var(--ink); background: rgba(255, 255, 255, .52); }
+input, select { min-height: 44px; padding: 10px 12px; }
+textarea { min-height: 126px; padding: 12px; resize: vertical; line-height: 1.7; }
+input:focus, select:focus, textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(178, 138, 70, .12); }
+.connection-grid { grid-template-columns: 1.6fr 1fr .65fr; }
+.field-help { margin: 13px 0 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.entry-grid-form { grid-template-columns: 1.2fr 1fr 1fr; }
+.wide-field { grid-column: span 1; }
+.detail-fields { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px 14px; margin-top: 17px; }
+.detail-field.full { grid-column: 1 / -1; }
+.detail-field small { display: block; margin: -3px 0 8px; color: #a29a90; font-size: 10px; }
+.form-actions { display: flex; justify-content: flex-end; gap: 11px; padding-top: 25px; }
+.secondary-button, .primary-button { min-height: 43px; padding: 0 18px; cursor: pointer; font-size: 12px; }
+.secondary-button { color: var(--muted); border: 1px solid var(--line); background: transparent; }
+.primary-button { color: var(--paper-light); border: 1px solid var(--gold-deep); background: var(--gold-deep); }
+.secondary-button:hover { color: var(--ink); background: rgba(255, 255, 255, .5); }
+.primary-button:hover { background: var(--ink-soft); }
+button:disabled { cursor: wait; opacity: .55; }
+.status { min-height: 22px; margin: 17px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+.status.success { color: var(--green); }
+.status.error { color: var(--red); }
+
+@media (max-width: 700px) {
+  .writer-shell { width: min(100% - 30px, 560px); padding-top: 22px; }
+  .back-link { margin-bottom: 31px; }
+  .notice { display: block; }
+  .notice strong { display: block; margin-bottom: 5px; }
+  .form-grid, .connection-grid, .entry-grid-form, .detail-fields { grid-template-columns: 1fr; }
+  .detail-field.full { grid-column: auto; }
+  .form-actions { justify-content: stretch; }
+  .form-actions button { flex: 1; }
+}

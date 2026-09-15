@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="骑龙资料库写入器" />
+    <title>骑龙 · 资料写入器</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./writer.css" />
+  </head>
+  <body>
+    <main class="writer-shell">
+      <header class="writer-header">
+        <a class="back-link" href="./index.html">← 返回资料库</a>
+        <p class="eyebrow">QILONG COMPENDIUM · EDITOR</p>
+        <h1>资料写入器</h1>
+        <p>选择要写入的分页，填写对应格式，提交后会直接更新 GitHub 上的资料库。</p>
+      </header>
+
+      <section class="notice" aria-label="使用说明">
+        <strong>首次使用需要 GitHub Token</strong>
+        <span>Token 只在当前页面内使用，不会写入仓库或保存到浏览器。建议创建仅拥有此仓库 Contents 写入权限的细粒度 Token。</span>
+      </section>
+
+      <form class="writer-form" data-writer-form>
+        <div class="form-section">
+          <div class="section-heading">
+            <p class="eyebrow">01 · CONNECTION</p>
+            <h2>连接仓库</h2>
+          </div>
+          <div class="form-grid connection-grid">
+            <label>
+              <span>GitHub Token</span>
+              <input name="token" type="password" autocomplete="off" placeholder="github_pat_..." required />
+            </label>
+            <label>
+              <span>仓库</span>
+              <input name="repository" value="SuperMagicCat/QL" required />
+            </label>
+            <label>
+              <span>分支</span>
+              <input name="branch" value="main" required />
+            </label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="section-heading">
+            <p class="eyebrow">02 · CATEGORY</p>
+            <h2>选择分页</h2>
+          </div>
+          <label>
+            <span>资料类型</span>
+            <select name="category" data-category-select required></select>
+          </label>
+          <p class="field-help" data-category-help></p>
+        </div>
+
+        <div class="form-section">
+          <div class="section-heading">
+            <p class="eyebrow">03 · ENTRY</p>
+            <h2>填写条目</h2>
+          </div>
+          <div class="form-grid entry-grid-form">
+            <label class="wide-field">
+              <span>条目名称</span>
+              <input name="name" maxlength="100" placeholder="例如：银月长弓" required />
+            </label>
+            <label>
+              <span>基础效果 / 使用条件</span>
+              <input name="meta" maxlength="120" placeholder="例如：伤害 2d8；需要敏捷 12" />
+            </label>
+            <label>
+              <span>标签</span>
+              <input name="tags" maxlength="120" placeholder="用逗号分隔，例如：远程，穿刺" />
+            </label>
+          </div>
+          <div class="detail-fields" data-detail-fields></div>
+        </div>
+
+        <div class="form-actions">
+          <button class="secondary-button" type="reset">清空表单</button>
+          <button class="primary-button" type="submit" data-submit-button>提交到 GitHub</button>
+        </div>
+        <p class="status" data-status role="status" aria-live="polite"></p>
+      </form>
+    </main>
+    <script src="./writer.js"></script>
+  </body>
+</html>

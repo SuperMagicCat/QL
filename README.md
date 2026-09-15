@@ -51,3 +51,9 @@ http://你的局域网IP:4173
 - `description`：详情描述
 
 首屏背景使用公开可访问的 Unsplash 图片地址，正式发布时也可以替换成你自己的世界观插画或游戏截图。
+
+## 使用资料写入器
+
+打开网站右上角的“写入器”，或直接访问 `/writer.html`。选择资料分页后，写入器会显示对应的填写格式，并通过 GitHub API 把新条目提交到 `app.js`。
+
+首次使用需要创建 GitHub fine-grained personal access token：仓库选择 `SuperMagicCat/QL`，Repository permissions 中只开启 `Contents: Read and write`。Token 只在当前写入页面使用，不要把 Token 写进代码或提交到仓库。
