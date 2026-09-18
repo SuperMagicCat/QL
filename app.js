@@ -13,6 +13,7 @@ const categories = [
 ];
 
 const entries = [
+  {"id":74,"category":"特殊效果词条","name":"独自承受","subtitle":"特殊效果词条 · 新增资料","meta":"待补充","tags":["特殊效果词条"],"description":"效果：意志+10\n一场战斗中，自身受到第一次致命伤害时，必定屹立不倒","updated":78},
   {"id":73,"category":"装备","name":"悼亡者吊坠","subtitle":"装备 · 新增资料","meta":"文档资料","tags":["装备"],"description":"特殊效果：不占用装备栏，获得被动“独自承受”","updated":77},
   {"id":72,"category":"特殊效果词条","name":"忧郁","subtitle":"特殊效果词条 · 新增资料","meta":"文档资料","tags":["特殊效果词条"],"description":"效果：当忧郁层数到达意志/2后，立刻对自己进行一次即死攻击","updated":76},
   {"id":71,"category":"道具","name":"飨草","subtitle":"道具 · 新增资料","meta":"文档资料","tags":["道具"],"description":"道具效果：食用后降低1d10点忧郁","updated":75},
