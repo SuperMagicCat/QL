@@ -13,6 +13,7 @@ const categories = [
 ];
 
 const entries = [
+  {"id":76,"category":"特殊效果词条","name":"金化X","subtitle":"特殊效果词条 · 新增资料","meta":"文档资料","tags":["特殊效果词条"],"description":"效果：自身获得X/10点护甲，向上取整，自身烫伤dot触发时，额外受到金化层数的伤害","updated":81},
   {"id":75,"category":"特殊效果词条","name":"眩晕","subtitle":"特殊效果词条 · 新增资料","meta":"待补充","tags":["特殊效果词条"],"description":"效果：当眩晕层数等于血量上限时，玩家进入混乱状态，并清空身上的全部眩晕层数","updated":79},
   {"id":74,"category":"特殊效果词条","name":"独自承受","subtitle":"特殊效果词条 · 新增资料","meta":"文档资料","tags":["特殊效果词条"],"description":"效果：意志+10\n一场战斗中，自身受到第一次致命伤害时，必定屹立不倒","updated":80},
   {"id":73,"category":"装备","name":"悼亡者吊坠","subtitle":"装备 · 新增资料","meta":"文档资料","tags":["装备"],"description":"特殊效果：不占用装备栏，获得被动“独自承受”","updated":77},
