@@ -13,6 +13,7 @@ const categories = [
 ];
 
 const entries = [
+  {"id":71,"category":"道具","name":"飨草","subtitle":"道具 · 新增资料","meta":"文档资料","tags":["道具"],"description":"道具效果：食用后降低1d10点忧郁","updated":75},
   {"id":70,"category":"机制","name":"巡回制图","subtitle":"机制 · 新增资料","meta":"文档资料","tags":["机制"],"description":"核心规则：静谧乡特殊规则：静谧乡无现成的内部地图，进入静谧乡后需要你自己独自绘制地区并将他们相连。","updated":74},
   {"id":69,"category":"装备","name":"典狱长的皮革大衣","subtitle":"装备 · 新增资料","meta":"文档资料","tags":["装备"],"description":"基础数值：护甲3\n特殊效果：一次攻击伤害结果低于期望时，重roll这次伤害，一场战斗一次","updated":72},
   {"id":68,"category":"战斗技巧","name":"静观其变-预知","subtitle":"战斗技巧 · 新增资料","meta":"文档资料","tags":["战斗技巧"],"description":"消耗：一个回合\n触发条件：下一次应对行动时，改用对方技能点数的骰子进行判定","updated":71},
