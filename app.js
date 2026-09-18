@@ -13,6 +13,7 @@ const categories = [
 ];
 
 const entries = [
+  {"id":73,"category":"装备","name":"悼亡者吊坠","subtitle":"装备 · 新增资料","meta":"文档资料","tags":["装备"],"description":"特殊效果：不占用装备栏，获得被动“独自承受”","updated":77},
   {"id":72,"category":"特殊效果词条","name":"忧郁","subtitle":"特殊效果词条 · 新增资料","meta":"文档资料","tags":["特殊效果词条"],"description":"效果：当忧郁层数到达意志/2后，立刻对自己进行一次即死攻击","updated":76},
   {"id":71,"category":"道具","name":"飨草","subtitle":"道具 · 新增资料","meta":"文档资料","tags":["道具"],"description":"道具效果：食用后降低1d10点忧郁","updated":75},
   {"id":70,"category":"机制","name":"巡回制图","subtitle":"机制 · 新增资料","meta":"文档资料","tags":["机制"],"description":"核心规则：静谧乡特殊规则：静谧乡无现成的内部地图，进入静谧乡后需要你自己独自绘制地区并将他们相连。","updated":74},
