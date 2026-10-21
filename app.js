@@ -13,6 +13,7 @@ const categories = [
 ];
 
 const entries = [
+  {"id":81,"category":"道具","name":"胆小鬼之手","subtitle":"道具 · 新增资料","meta":"待补充","tags":["道具","妄议之镜-饰品"],"description":"使用方式：自身受到的伤害骰子小于5个时，每个骰子伤害-1","updated":86},
   {"id":80,"category":"道具","name":"刀具套组","subtitle":"道具 · 新增资料","meta":"待补充","tags":["道具","妄议之镜-饰品"],"description":"使用方式：每场战斗开始时投射一把必中的伤害为10的小刀","updated":85},
   {"id":79,"category":"祷告","name":"苦痛啊，悉数偿还","subtitle":"祷告 · 新增资料","meta":"文档资料","tags":["祷告"],"description":"祷告效果：自身被攻击后进行一次1d15的反击判定，并获得等量临时护盾","updated":84},
   {"id":78,"category":"武器","name":"自我裁决","subtitle":"武器 · 新增资料","meta":"文档资料","tags":["武器"],"description":"伤害与基础规则：4d10/70-4d10，对自身造成15点伤害\n特殊效果：亡国命运：对自身造成20点伤害，同时攻击2个敌人\n格挡：进行一次力量判定，成功时所受伤害减少5,失败时所受伤害减少1d5，大成功时所受伤害减少10","updated":83},
