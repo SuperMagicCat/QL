@@ -13,6 +13,7 @@ const categories = [
 ];
 
 const entries = [
+  {"id":85,"category":"战斗技巧","name":"符文爆裂X","subtitle":"战斗技巧 · 新增资料","meta":"待补充","tags":["战斗技巧","文档资料"],"description":"触发条件：当自身生命值超过X时，立刻失去全部的生命值并造成一次（n）d（x/n）的真实伤害，随后死亡。","updated":90},
   {"id":84,"category":"特殊效果词条","name":"活石X","subtitle":"特殊效果词条 · 新增资料","meta":"待补充","tags":["特殊效果词条","文档资料"],"description":"效果：每当判定骰子被投掷时，额外获得X点生命值与生命上限。","updated":89},
   {"id":83,"category":"道具","name":"狗牙","subtitle":"道具 · 新增资料","meta":"待补充","tags":["道具","妄议之镜-饰品"],"description":"使用方式：血量下降后发出巨大的嚎叫声，下一次攻击，伤害骰子+1","updated":88},
   {"id":82,"category":"道具","name":"活甲","subtitle":"道具 · 新增资料","meta":"待补充","tags":["道具","妄议之镜-饰品"],"description":"使用方式：每次受到伤害时，受到的伤害额外+1，触发十次后变为10点护甲","updated":87},
