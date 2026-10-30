@@ -13,6 +13,7 @@ const categories = [
 ];
 
 const entries = [
+  {"id":87,"category":"装备","name":"邪神定制-纯血审判服","subtitle":"装备 · 新增资料","meta":"待补充","tags":["装备","文档资料"],"description":"基础数值：5护甲\n特殊效果：每次攻击成功时进入”制裁之喜“状态。制裁之喜状态持续一回合，期间自己护甲变为2，攻击判定改为使用90的骰子。","updated":92},
   {"id":86,"category":"道具","name":"抗毒剂","subtitle":"道具 · 新增资料","meta":"待补充","tags":["道具","文档资料"],"description":"使用方式：外敷\n道具效果：受到的中毒伤害减半，向下取整，持续一天","updated":91},
   {"id":85,"category":"战斗技巧","name":"符文爆裂X","subtitle":"战斗技巧 · 新增资料","meta":"待补充","tags":["战斗技巧","文档资料"],"description":"触发条件：当自身生命值超过X时，立刻失去全部的生命值并造成一次（n）d（x/n）的真实伤害，随后死亡。","updated":90},
   {"id":84,"category":"特殊效果词条","name":"活石X","subtitle":"特殊效果词条 · 新增资料","meta":"待补充","tags":["特殊效果词条","文档资料"],"description":"效果：每当判定骰子被投掷时，额外获得X点生命值与生命上限。","updated":89},
